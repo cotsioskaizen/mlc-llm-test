@@ -13,7 +13,7 @@ env:
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}
 
 jobs:
-  build:
+  build-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,41 +38,44 @@ jobs:
         run: |
           docker push $IMAGE_NAME/$RELEASE_NAME:latest
   
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   permissions:
-  #     contents: read
-  #     packages: read
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      packages: read
 
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-  #     - name: Login to Github Container Registry
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ github.repository_owner }}
-  #         password: ${{ secrets.GHCR_TOKEN }}
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
-  #     - name: Pull Docker Image from GitHub Container Registry
-  #       run: |
-  #         docker pull $IMAGE_NAME/$RELEASE_NAME:latest
+      - name: Pull Docker Image from GitHub Container Registry
+        run: |
+          docker pull $IMAGE_NAME/$RELEASE_NAME:latest
 
-  #     - name: Run Tests inside Docker Container
-  #       run: |
-  #         docker run --rm \
-  #           -v ${{ github.workspace }}:/workspace/mlc-llm-test \
-  #           $IMAGE_NAME/$RELEASE_NAME:latest bash -c "
-  #               cd /workspace/mlc-llm-test &&
-  #               pip install pytest &&
-  #               pytest -q
-  #         "
+      - name: Run Tests inside Docker Container
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace/mlc-llm-test \
+            $IMAGE_NAME/$RELEASE_NAME:latest bash -c "
+                cd /workspace/mlc-llm-test &&
+                bash ci/task/black.sh &&
+                bash ci/task/isort.sh &&
+                bash ci/task/pylint.sh
+          "
 
   build-linux:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build-image, test]
     permissions:
       contents: read
       packages: write
@@ -80,7 +83,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
+        with:
+          submodules: recursive
+          
       - name: Login to Github Container Registry
         uses: docker/login-action@v3
         with:
