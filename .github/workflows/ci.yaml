@@ -9,8 +9,8 @@ on:
 
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}:latest
   RELEASE_NAME: "mlc-llm"
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/$RELEASE_NAME:latest
 
 jobs:
   build:
