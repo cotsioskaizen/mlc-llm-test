@@ -64,7 +64,7 @@ jobs:
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace/mlc-llm-test \
-            $IMAGE_NAME bash -c "
+            $IMAGE_NAME/$RELEASE_NAME:latest bash -c "
                 cd /workspace/mlc-llm-test &&
                 pip install pytest &&
                 pytest -q
@@ -87,7 +87,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
-          
+
       - name: Pull Docker Image from GitHub Container Registry
         run: |
           docker pull $IMAGE_NAME/$RELEASE_NAME:latest
