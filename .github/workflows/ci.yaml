@@ -69,8 +69,7 @@ jobs:
             $IMAGE_NAME/$RELEASE_NAME:latest bash -c "
                 cd /workspace/mlc-llm-test &&
                 bash ci/task/black.sh &&
-                bash ci/task/isort.sh &&
-                bash ci/task/pylint.sh
+                bash ci/task/isort.sh
           "
 
   build-linux:

@@ -30,7 +30,7 @@ ENV CONDA_DEFAULT_ENV=mlc-build
 ENV TVM_SOURCE_DIR=3rdparty/tvm
 ENV PATH="$CONDA_DIR/envs/$CONDA_DEFAULT_ENV/bin:$PATH"
 
-RUN pip install --no-cache-dir wheel setuptools
+RUN pip install --no-cache-dir wheel setuptools black isort
 
 WORKDIR /workspace
 
