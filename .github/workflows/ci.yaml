@@ -10,7 +10,7 @@ on:
 
 env:
   RELEASE_NAME: "mlc-llm"
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/$RELEASE_NAME:latest
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build:
@@ -32,11 +32,11 @@ jobs:
       
       - name: Build Docker Image
         run: |
-          docker build -t $IMAGE_NAME .
+          docker build -t $IMAGE_NAME/$RELEASE_NAME:latest .
       
       - name: Push Docker Image to GitHub Container Registry
         run: |
-          docker push $IMAGE_NAME
+          docker push $IMAGE_NAME/$RELEASE_NAME:latest
   
   test:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
 
       - name: Pull Docker Image from GitHub Container Registry
         run: |
-          docker pull $IMAGE_NAME
+          docker pull $IMAGE_NAME/$RELEASE_NAME:latest
 
       - name: Run Tests inside Docker Container
         run: |
@@ -76,20 +76,19 @@ jobs:
 
       - name: Pull Docker Image from GitHub Container Registry
         run: |
-          docker pull $IMAGE_NAME
+          docker pull $IMAGE_NAME/$RELEASE_NAME:latest
 
       - name: Build Release inside Docker Container
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace/mlc-llm-test \
-            -v ${{ github.workspace }}/python/dist:/workspace/mlc-llm-test/python/dist \
-            $IMAGE_NAME build
+            $IMAGE_NAME/$RELEASE_NAME:latest build
 
       - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: $RELEASE_NAME-linux
-          path: dist/*.whl
+          path: mlc-llm-test/python/dist/*.whl
   
   release:
     runs-on: ubuntu-latest
