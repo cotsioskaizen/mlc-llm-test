@@ -29,7 +29,7 @@ fi
     
     cmake .. && make -j$(nproc) && cd ..
     
-    python ..python/setup.py bdist_wheel
+    python ../python/setup.py bdist_wheel
     exit 0
 fi
 
