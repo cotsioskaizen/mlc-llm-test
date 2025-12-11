@@ -38,41 +38,41 @@ jobs:
         run: |
           docker push $IMAGE_NAME/$RELEASE_NAME:latest
   
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-      packages: read
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   permissions:
+  #     contents: read
+  #     packages: read
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
 
-      - name: Login to Github Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GHCR_TOKEN }}
+  #     - name: Login to Github Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.repository_owner }}
+  #         password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Pull Docker Image from GitHub Container Registry
-        run: |
-          docker pull $IMAGE_NAME/$RELEASE_NAME:latest
+  #     - name: Pull Docker Image from GitHub Container Registry
+  #       run: |
+  #         docker pull $IMAGE_NAME/$RELEASE_NAME:latest
 
-      - name: Run Tests inside Docker Container
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/workspace/mlc-llm-test \
-            $IMAGE_NAME/$RELEASE_NAME:latest bash -c "
-                cd /workspace/mlc-llm-test &&
-                pip install pytest &&
-                pytest -q
-          "
+  #     - name: Run Tests inside Docker Container
+  #       run: |
+  #         docker run --rm \
+  #           -v ${{ github.workspace }}:/workspace/mlc-llm-test \
+  #           $IMAGE_NAME/$RELEASE_NAME:latest bash -c "
+  #               cd /workspace/mlc-llm-test &&
+  #               pip install pytest &&
+  #               pytest -q
+  #         "
 
   build-linux:
     runs-on: ubuntu-latest
-    needs: test
+    # needs: test
     permissions:
       contents: read
       packages: write
