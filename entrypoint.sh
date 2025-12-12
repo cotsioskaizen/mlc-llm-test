@@ -33,7 +33,9 @@ fi
     cd python
     python -m pip install --upgrade build
     python -m build --wheel
-
+    echo "---List path---"
+    pwd
+    echo "---Contents of dist/---"
     ls dist/
 
     exit 0
