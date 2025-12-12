@@ -110,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: $RELEASE_NAME-linux
-          path: mlc-llm-test/python/dist/*.whl
+          path: ${{ github.workspace }}/python/dist/*.whl
 
   # build-windows-wheel:
   #   runs-on: windows-latest
