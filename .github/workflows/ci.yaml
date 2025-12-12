@@ -109,7 +109,7 @@ jobs:
       - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: $RELEASE_NAME-linux
+          name: ${{ env.RELEASE_NAME }}-linux
           path: ${{ github.workspace }}/python/dist/*.whl
 
   build-windows-wheel:
@@ -146,12 +146,12 @@ jobs:
       - name: Run build script
         shell: pwsh
         run: |
-          ./scripts/build-windows.ps1 -PythonVersion "3.13" -BuildType "Release"
+          ./build-wheel-windows.ps1 -PythonVersion "3.13" -BuildType "Release"
 
       - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: $RELEASE_NAME-windows
+          name: ${{ env.RELEASE_NAME }}-windows
           path: mlc-llm-test/python/dist/*.whl
   
   release:
