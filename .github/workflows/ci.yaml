@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request:
-  workflow_dispatch:
+  # pull_request: # CI should run on PR but since its the same flow that creates release we dont want to create on PR
 
 
 env:
@@ -177,8 +176,8 @@ jobs:
       - name: Create GitHub Release and Upload Wheels
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "0.1.1"
-          name: "Release 0.1.1"
+          tag_name: "0.1.2" # Ideally this should trigger only on tag changes but need to split the workflows
+          name: "Release 0.1.2"
           files: |
             artifacts/linux/*.whl
             artifacts/windows/*.whl
