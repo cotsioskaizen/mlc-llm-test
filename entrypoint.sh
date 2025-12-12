@@ -29,8 +29,18 @@ fi
     
     cmake .. && make -j$(nproc) && cd ..
     echo "Build completed."
+    cd rust
+    cargo build --release
+    cd ..
+    mkdir -p python/mlc_llm/runtime
+    cp build/libmlc_llm.* python/mlc_llm/runtime/ || true
+    cp rust/target/release/mlc_llm_tokenizers.* python/mlc_llm/runtime/ || true
     cd python
-    python setup.py bdist_wheel
+    python -m pip install --upgrade build
+    python -m build --wheel
+
+    ls dist/
+
     exit 0
 fi
 
