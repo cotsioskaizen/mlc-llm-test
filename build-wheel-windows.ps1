@@ -39,15 +39,6 @@ cmake --build . --config $BuildType --parallel
 
 Pop-Location
 
-$runtimeDir = "python/mlc_llm/runtime"
-
-if (Test-Path $runtimeDir) {
-    Remove-Item -Recurse -Force $runtimeDir
-}
-New-Item -ItemType Directory -Path $runtimeDir | Out-Null
-
-Copy-Item "build/$BuildType/tvm_runtime.dll" "$runtimeDir/tvm_runtime.dll"
-
 Write-Host "`n--- Building Python wheel ---"
 
 Push-Location python
